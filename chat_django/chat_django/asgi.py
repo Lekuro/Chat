@@ -1,0 +1,46 @@
+"""
+ASGI config for chat_django project.
+
+It exposes the ASGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
+"""
+
+import os
+
+from django.core.asgi import get_asgi_application
+# added
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+import chat.routing
+
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat_django.settings')
+
+# application = get_asgi_application()
+application = ProtocolTypeRouter({
+    'http': get_asgi_application(),
+    # Jast http for now. Other add later.
+    'websocket': AuthMiddlewareStack(
+        URLRouter(
+            chat.routing.websocket_urlpatterns
+        )
+    ),
+})
+# from django.urls import re_path
+
+# from channels.routing import ProtocolTypeRouter, URLRouter
+# from channels.auth import AuthMiddlewareStack
+
+# from chat import consumers
+
+# application = ProtocolTypeRouter({
+
+#     "websocket": AuthMiddlewareStack(
+#         URLRouter([
+#             re_path(r"^front(end)/$", consumers.ChatConsumer.as_asgi()),
+#         ])
+#     ),
+
+# })
