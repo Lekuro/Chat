@@ -12,8 +12,9 @@ class ChatRoom(models.Model):
     def __str__(self):
         return self.room_name
 
-    def create(self, room_name, user_id):
-        self.room_name = room_name
+    @staticmethod
+    def create(room_name, user_id):
+        new_room = ChatRoom(room_name=room_name)
+        new_room.save()
         user_room_creator = User.objects.get(pk=user_id)
-        self.room_users.add(user_room_creator)
-        return self
+        new_room.room_users.add(user_room_creator)

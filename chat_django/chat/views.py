@@ -8,10 +8,8 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def index_view(request):
     if request.method == 'POST':
-        new_room_name = request['new_room_name']
-        print(new_room_name)
-        created_room = ChatRoom.create(room_name, request.user.id)
-        ChatRoom.objects.add(created_room)
+        new_room_name = request.POST['new_room_name']
+        ChatRoom.create(new_room_name, request.user.id)
         return redirect('/chat')
     userdb = User.objects.get(pk=request.user.id)
     return render(request, 'chat/index.html', {'userdb': userdb})
@@ -27,13 +25,3 @@ def room_view(request, room_id):
         })
     else:
         return redirect('/chat')
-
-
-def create_room_view(request, room_name):
-    created_room = ChatRoom.create(room_name, request.user.id)
-    ChatRoom.objects.add(created_room)
-    return redirect('/chat')
-
-
-# def login(request):
-#     return render(request, 'chat/login.html', {})
