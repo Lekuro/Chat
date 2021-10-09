@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.conf import settings
 # Create your views here.
 
 
@@ -12,7 +13,7 @@ def login_view(request):
             username=user_name, password=user_password)
         if authenticated_user:
             login(request, authenticated_user)
-            return redirect('/chat/')
+            return redirect(settings.LOGIN_REDIRECT_URL)
         return render(request, 'login.html', {
             'user_name': user_name, 'login_error': True})
 
@@ -33,5 +34,5 @@ def registration_view(request):
                                         # email='jlennon@beatles.com',
                                         password=user_password)
         login(request, user)
-        return redirect('/chat/')
+        return redirect(settings.LOGIN_REDIRECT_URL)
     return redirect('login_endpoint')

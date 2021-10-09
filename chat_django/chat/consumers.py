@@ -71,6 +71,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.auth import login
+import datetime
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -84,10 +85,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        message = f'{self.user.username} joined this chat room'
+        self.log_message(self.room_name, self.user, message)
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'user': self.user.username
+            },
+
+        )
 
         await self.accept()
 
     async def disconnect(self, close_code):
+        message = f'{self.user.username} left this chat room'
+        self.log_message(self.room_name, self.user, message)
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'user': self.user.username
+            },
+
+        )
         # Leave room group
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -95,11 +118,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     # Receive message from WebSocket
+
     async def receive(self, text_data):
         # login the user to this session.
         await login(self.scope, self.user)
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        self.log_message(self.room_name, self.user, message)
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -120,3 +145,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': message,
             'user': event['user']
         }))
+
+    def log_message(self, chat_room_id, user_name, message):
+        with open(f'logs/chatroom_{chat_room_id}.log', 'a') as f:
+            f.write(f'{datetime.datetime.now()}\t{user_name}\t{message}\n')

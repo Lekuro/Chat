@@ -129,6 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/chat'
 LOGOUT_REDIRECT_URL = '/chat'
+LOGIN_URL = '/auth'
 # Channels
 
 ASGI_APPLICATION = 'chat_django.asgi.application'

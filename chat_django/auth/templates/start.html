@@ -5,7 +5,7 @@
         <title>Chat Rooms</title>
     </head>
     <body>
-        <h2>Log In</h2>
+        <h2>Enter your login</h2>
         <form method="post" action="{%url 'login_endpoint'%}">
             {% csrf_token %} {{ form.as_p }}
             <input type="text" name="user_name" />
