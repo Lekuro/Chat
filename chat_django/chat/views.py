@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 def index_view(request):
     if request.method == 'POST':
         new_room_name = request.POST['new_room_name']
-        ChatRoom.create(new_room_name, request.user.id)
+        if new_room_name:
+            ChatRoom.create(new_room_name, request.user.id)
         return redirect('/chat')
     userdb = User.objects.get(pk=request.user.id)
     return render(request, 'chat/index.html', {'userdb': userdb})
