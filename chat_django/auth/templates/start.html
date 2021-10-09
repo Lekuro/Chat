@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Chat Rooms</title>
+    </head>
+    <body>
+        <h2>Log In</h2>
+        <form method="post" action="{%url 'login_endpoint'%}">
+            {% csrf_token %} {{ form.as_p }}
+            <input type="text" name="user_name" />
+            <button type="submit">Next</button>
+        </form>
+    </body>
+</html>

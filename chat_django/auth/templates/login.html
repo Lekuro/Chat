@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Chat Rooms</title>
+    </head>
+    <body>
+        <h2>Log In</h2>
+        {%if login_error%}
+        <b style="background-color: red">Invalid password</b>
+        {%endif%}
+        <form method="post">
+            {% csrf_token %} {{user_name}}<br />
+            <input type="hidden" name="user_name" value="{{user_name}}" />
+            <input type="password" name="password" />
+            <button type="submit">Log In</button>
+        </form>
+    </body>
+</html>
