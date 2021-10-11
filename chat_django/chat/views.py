@@ -43,3 +43,7 @@ def invite_user(request, room_id):
     if not room.room_users.filter(id=invited_user_id).exists():
         room.room_users.add(invited_user)
     return redirect(f'/chat/{room_id}')
+
+
+def redirect_to_chat(request):
+    return redirect('/chat')
