@@ -26,8 +26,8 @@
                 </li>
                 {% endfor %} {% for user in not_invited_users %}
                 <li class="contact">
-                    <div class="wrap">
-                        <i class="fa fa-user-plus fa-lg" aria-hidden="true" onclick="addUser({{user.id}})"></i>
+                    <div class="wrap" onclick="addUser({{user.id}})">
+                        <i class="fa fa-user-plus fa-lg" aria-hidden="true"></i>
                         <div class="meta">
                             <p class="name">{{user.username}}</p>
                         </div>
