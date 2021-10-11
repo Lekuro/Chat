@@ -131,34 +131,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/chat'
 LOGOUT_REDIRECT_URL = '/chat'
 LOGIN_URL = '/auth'
-# Channels
 
+# Channels
 ASGI_APPLICATION = 'chat_django.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # 6379   redis-13797.c135.eu-central-1-1.ec2.cloud.redislabs.com:13797
             'hosts': [('redis://:BKfpMVb7KUe1YAhkAFWElFR9CQ3oWOta@redis-13797.c135.eu-central-1-1.ec2.cloud.redislabs.com:13797/0')],
         },
     },
 }
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "asgi_redis.RedisChannelLayer",
-#         "ROUTING": "widget.routing.channel_routing",
-#         "CONFIG": {
-#             "hosts": [("redis://:mypassword@127.0.0.1:6379/0")],
-#         },
-#     },
-# }
-
-# use for check does channel works with redis
-# python manage.py shell
-# >>> import channels.layers
-# >>> channel_layer = channels.layers.get_channel_layer()
-# >>> from asgiref.sync import async_to_sync
-# >>> async_to_sync(channel_layer.send)('test_channel', {'type': 'hello'})
-# >>> async_to_sync(channel_layer.receive)('test_channel')
-# {'type': 'hello'}
-# exit()

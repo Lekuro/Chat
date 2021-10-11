@@ -74,6 +74,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             f.write(f'{datetime.datetime.now()}\t{user_name}\t{message}\n')
 
     def random_color(self):
+        import random
         colors_list = {
             'aqua': "#00ffff",
             'azure': "#f0ffff",
@@ -119,5 +120,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'white': "#ffffff",
             'yellow': "#ffff00"
         }
-        import random
         return random.choice(list(colors_list.values()))

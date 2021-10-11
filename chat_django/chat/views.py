@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import ChatRoom
-# Create your views here.
 from django.contrib.auth.decorators import login_required
 
 
@@ -19,7 +18,6 @@ def index_view(request):
 @login_required
 def room_view(request, room_id):
     room = ChatRoom.objects.get(pk=room_id)
-    # not_invited_users = User.objects.all()
     not_invited_users = []
     room_users = []
     for user in User.objects.all():
