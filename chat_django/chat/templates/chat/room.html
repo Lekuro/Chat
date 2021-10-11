@@ -5,7 +5,6 @@
         <div id="profile">
             <div class="wrap-room-icon">
                 <img id="profile-img" src="{% static 'images/chat-bubble.png' %}" class="online" alt="" />
-
                 <p>{{room.room_name}}</p>
             </div>
         </div>
@@ -19,7 +18,7 @@
                 <li class="contact">
                     <div class="wrap">
                         <span class="contact-status online"></span>
-                        <img src="{% static 'images/user-icon.svg' %}" alt="" />
+                        <i class="fa fa-user fa-2x" id="chat-user-icon-{{user.id}}"></i>
                         <div class="meta">
                             <p class="name">{{user.username}}</p>
                         </div>
@@ -28,36 +27,13 @@
                 {% endfor %} {% for user in not_invited_users %}
                 <li class="contact">
                     <div class="wrap">
-                        <i class="fa fa-plus fa-lg" onclick="addUser({{user.id}})"></i>
+                        <i class="fa fa-user-plus fa-lg" aria-hidden="true" onclick="addUser({{user.id}})"></i>
                         <div class="meta">
                             <p class="name">{{user.username}}</p>
                         </div>
                     </div>
                 </li>
-                {% endfor %} {% comment %}
-                <form method="POST" action="{% url 'invite_user_endpoint' room.id %}">
-                    {% csrf_token %}{% load static %}
-                    <select id="users" name="invited_user_id">
-                        {% for user in not_invited_users %}
-                        <option value="{{user.id}}">{{user.username}}</option>
-                        {% endfor %}</select
-                    ><br />
-                    <input id="room-name-submit" type="submit" />
-                </form>
-                <li class="contact active">
-                    <div class="wrap">
-                        <span class="contact-status busy"></span>
-                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                        <div class="meta">
-                            <p class="name">Harvey Specter</p>
-                            <p class="preview">
-                                Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you
-                                do any one of a hundred and forty six other things.
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                {% endcomment %}
+                {% endfor %}
             </ul>
             <form method="POST" action="{% url 'invite_user_endpoint' room.id %}" id="user_invite_form">
                 {% csrf_token %}
@@ -65,18 +41,22 @@
             </form>
         </div>
         <div id="bottom-bar">
-            <button id="addcontact">
-                <i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span>
+            <button id="addcontact" onclick="window.location.href='{% url 'logout' %}'">
+                <i class="fa fa-sign-out-alt fa-lg" aria-hidden="true"></i>
+                <span>Logout</span>
             </button>
-            <button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
+            <button onclick="window.location.href='{% url 'index' %}'">
+                <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+                <span>Back</span>
+            </button>
         </div>
     </div>
     <div class="content">
         <div class="contact-profile">
-            <img src="{% static 'images/user-icon.svg' %}" alt="" />
+            <i class="fa fa-user fa-2x" id="current-user-icon"></i>
             <p>{{user.username}}</p>
         </div>
-        <div class="messages">
+        <div id="message-scroll" class="messages">
             <ul id="for-inserting-message"></ul>
         </div>
         <div class="message-input">
@@ -93,12 +73,20 @@
 <script>
     const roomName = "{{ room.id }}";
     const curentUserName = "{{user.username}}";
-
+    const curentUserId = {{user.id}};
+    let current_user_color = false;
     const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/");
+    const objDiv = document.getElementById("message-scroll");
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         document.getElementById("for-inserting-message").innerHTML += createUserMessageHtml(data);
+        if (!current_user_color && data.user_id == curentUserId) {
+            current_user_color = true;
+            document.getElementById("current-user-icon").style.color = data.color;
+        }
+        document.getElementById(`chat-user-icon-${data.user_id}`).style.color = data.color;
+        objDiv.scrollTop = objDiv.scrollHeight;
     };
 
     chatSocket.onclose = function (e) {

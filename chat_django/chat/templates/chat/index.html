@@ -1,27 +1,32 @@
-{% extends 'base_template.html' %} {% block 'body' %} Hi {{ user.username }}! <br />
-<div>
-    <b>You have {{userdb.chat_rooms.count}} rooms:</b>
+{% extends 'base_template.html' %} {% block 'body' %}{% load static %}
+
+<form method="POST" action="{% url 'logout' %}" class="form-signin">
+    {% csrf_token %}
+    <img class="mb-4" src="{% static 'images/chat-bubble.png' %}" alt="" width="72" height="72" />
+    <h1 class="h3 mb-3 font-weight-normal">You have {{userdb.chat_rooms.count}} rooms:</h1>
     <ul>
         {% for room in userdb.chat_rooms.all %}
-        <li><a href="{% url 'room_endpoint' room.id %}">{{room.room_name}}</a></li>
+        <li>
+            <a href="{% url 'room_endpoint' room.id %}"
+                ><div class="alert alert-primary mt-3" role="alert">{{room.room_name}}</div></a
+            >
+        </li>
         {%endfor %}
     </ul>
-</div>
-<p><a href="{% url 'logout' %}">Logout</a></p>
-What chat room would you like to enter?<br />
-<form method="POST" action="{% url 'index' %}">
-    {% csrf_token %}
-    <input id="room-name-input" type="text" size="100" name="new_room_name" /><br />
-    <input id="room-name-submit" type="submit" />
+    <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Logout</button>
 </form>
-<script>
-    document.querySelector("#room-name-input").focus();
-    document.querySelector("#room-name-input").onkeyup = function (e) {
-        if (e.keyCode === 13) {
-            // enter, return
-            document.querySelector("#room-name-submit").click();
-        }
-    };
-</script>
-
-{% endblock %}
+<form method="POST" action="{% url 'index' %}" class="form-signin">
+    {% csrf_token %}
+    <label for="create-chat-room" class="sr-only">Create new chat room?</label>
+    <input
+        type="text"
+        name="new_room_name"
+        id="create-chat-room"
+        class="form-control"
+        placeholder="New room name"
+        required
+        autofocus
+    />
+    <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Create</button>
+</form>
+{%endblock%}
