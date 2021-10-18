@@ -46,7 +46,8 @@ def room_view(request, room_id):
 
 
 def invite_user(request, room_id):
-    invited_user_id = request.POST['invited_user_id']
+    # invited_user_id = request.POST['invited_user_id']
+    invited_user_id = request.POST.get('invited_user_id', False)
     # invited_user = User.objects.get(id=invited_user_id)
     invited_user = get_object_or_404(User, pk=invited_user_id)
     room = ChatRoom.objects.get(id=room_id)
