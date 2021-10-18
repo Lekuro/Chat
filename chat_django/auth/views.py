@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.conf import settings
+from django.views.generic import TemplateView
 
 
 def login_view(request):
@@ -21,8 +22,10 @@ def login_view(request):
     return render(request, 'registration.html', {'user_name': user_name})
 
 
-def start_view(request):
-    return render(request, 'start.html')
+# def start_view(request):
+#     return render(request, 'start.html')
+class StartView(TemplateView):
+    template_name = 'start.html'
 
 
 def registration_view(request):

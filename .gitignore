@@ -130,3 +130,5 @@ dmypy.json
 
 # I have added
 task.txt
+deleted/
+db3.sqlite3
