@@ -26,14 +26,16 @@ def index_view(request):
 
 @login_required
 def room_view(request, room_id):
-    room = ChatRoom.objects.get(pk=room_id)
-    not_invited_users = []
-    room_users = []
-    for user in User.objects.all():
-        if not user.chat_rooms.filter(id=room_id).exists():
-            not_invited_users.append(user)
-        else:
-            room_users.append(user)
+    # room = ChatRoom.objects.get(pk=room_id)
+    room = get_object_or_404(ChatRoom, pk=room_id)
+    # for user in User.objects.all():
+    #     if not user.chat_rooms.filter(id=room_id).exists():
+    #         not_invited_users.append(user)
+    #     else:
+    #         room_users.append(user)
+    room_users = room.room_users
+    room_user_ids = list(room_users.values_list('id', flat=True))
+    not_invited_users = User.objects.exclude(id__in=room_user_ids)
     user_has_access = room.room_users.filter(pk=request.user.id).exists()
     if user_has_access:
         return render(request, 'chat/room.html', {

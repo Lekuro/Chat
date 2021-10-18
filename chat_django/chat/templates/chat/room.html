@@ -14,7 +14,7 @@
         </div>
         <div id="contacts">
             <ul>
-                {% for user in room_users %}
+                {% for user in room_users.all %}
                 <li class="contact">
                     <div class="wrap">
                         <span class="contact-status online"></span>
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </li>
-                {% endfor %} {% for user in not_invited_users %}
+                {% endfor %} {% for user in not_invited_users.all %}
                 <li class="contact">
                     <div class="wrap" onclick="addUser({{user.id}})">
                         <i class="fa fa-user-plus fa-lg" aria-hidden="true"></i>
