@@ -7,6 +7,3 @@ from .models import ChatRoom
 def post_save_user(created, instance, **kwargs):
     if created and instance.creator:
         instance.room_users.add(instance.creator)
-    else:
-        return render(request, 'chat/index.html',
-                      {'userdb': userdb, 'error_message': "Room wasn't created"})

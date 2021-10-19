@@ -90,7 +90,7 @@
     };
 
     chatSocket.onclose = function (e) {
-        windows.location.host = "/chat";
+        window.location.href = "/chat";
         console.error("Chat socket closed unexpectedly");
     };
 
