@@ -6,22 +6,24 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def index_view(request):
-    # userdb = User.objects.get(pk=request.user.id)
-    userdb = get_object_or_404(User, pk=request.user.id)
+    # user_room_creator = User.objects.get(pk=request.user.id)
+    user_room_creator = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST':
         #new_room_name = request.POST['new_room_name']
         new_room_name = request.POST.get('new_room_name', False)
-        if new_room_name:
-            print(userdb.chat_rooms)
-            if ChatRoom.objects.filter(room_name=new_room_name).exists():
-                return render(request, 'chat/index.html', {'userdb': userdb, 'error_message': f'Room {new_room_name} alredy exists'})
-            r = ChatRoom.create(new_room_name, request.user.id)
-            print('was created room:', r)
-            if not r:
-                return render(request, 'chat/index.html',
-                              {'userdb': userdb, 'error_message': "Room wasn't created"})
-        return redirect('/chat')
-    return render(request, 'chat/index.html', {'userdb': userdb})
+        if not new_room_name:
+            return redirect('/chat')
+        if ChatRoom.objects.filter(room_name=new_room_name).exists():
+            return render(request, 'chat/index.html', {'userdb': user_room_creator, 'error_message': f'Room {new_room_name} alredy exists'})
+        try:
+            new_room = ChatRoom(room_name=new_room_name)
+            new_room.creator = user_room_creator
+            new_room.save()
+        except:
+            return render(request, 'chat/index.html',
+                          {'userdb': user_room_creator, 'error_message': "Room wasn't created"})
+
+    return render(request, 'chat/index.html', {'userdb': user_room_creator})
 
 
 @login_required

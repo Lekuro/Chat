@@ -9,13 +9,13 @@ class ChatRoom(models.Model):
     def __str__(self):
         return self.room_name
 
-    @staticmethod
-    def create(room_name, user_id):
-        try:
-            user_room_creator = User.objects.get(pk=user_id)
-            new_room = ChatRoom(room_name=room_name)
-            new_room.save()
-            new_room.room_users.add(user_room_creator)
-            return True
-        except User.DoesNotExist:
-            return False
+    # @staticmethod
+    # def create(room_name, user_id):
+    #     try:
+    #         user_room_creator = User.objects.get(pk=user_id)
+    #         new_room = ChatRoom(room_name=room_name)
+    #         new_room.save()
+    #         new_room.room_users.add(user_room_creator)
+    #         return True
+    #     except User.DoesNotExist:
+    #         return False
